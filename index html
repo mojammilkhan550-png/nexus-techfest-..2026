@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechFest 3D Experience</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+overflow-x:hidden;
+background:#050816;
+color:white;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+header{
+position:fixed;
+top:0;
+width:100%;
+padding:20px 50px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#00ffff;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+.hero{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.hero h1{
+font-size:4rem;
+color:#00ffff;
+text-shadow:0 0 20px #00ffff;
+}
+
+.hero p{
+margin-top:15px;
+font-size:1.2rem;
+}
+
+.btn{
+display:inline-block;
+margin-top:20px;
+padding:12px 25px;
+background:#00ffff;
+color:black;
+font-weight:bold;
+border-radius:30px;
+text-decoration:none;
+}
+
+section{
+padding:100px 10%;
+min-height:100vh;
+}
+
+.card-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+margin-top:40px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:20px;
+backdrop-filter:blur(10px);
+transition:.4s;
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.05);
+box-shadow:0 0 20px #00ffff;
+}
+
+footer{
+text-align:center;
+padding:30px;
+background:black;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">TECHFEST 3D</div>
+<nav>
+<a href="#about">About</a>
+<a href="#events">Events</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<div id="canvas-container"></div>
+
+<section class="hero">
+<div>
+<h1>TECHFEST 2026</h1>
+<p>Experience Innovation in 3D</p>
+<a href="#events" class="btn">Explore</a>
+</div>
+</section>
+
+<section id="about">
+<h2>About TechFest</h2>
+<p style="margin-top:20px;">
+TechFest is a futuristic event showcasing AI, Robotics,
+Cybersecurity, Space Tech and Innovation.
+</p>
+</section>
+
+<section id="events">
+<h2>Featured Events</h2>
+
+<div class="card-container">
+
+<div class="card">
+<h3>AI Challenge</h3>
+<p>Compete in next-generation AI competitions.</p>
+</div>
+
+<div class="card">
+<h3>Hackathon</h3>
+<p>Build real-world solutions in 24 hours.</p>
+</div>
+
+<div class="card">
+<h3>Robotics Arena</h3>
+<p>Show your robotics engineering skills.</p>
+</div>
+
+<div class="card">
+<h3>Cyber Security</h3>
+<p>Capture the Flag and ethical hacking contests.</p>
+</div>
+
+</div>
+</section>
+
+<section id="contact">
+<h2>Join TechFest</h2>
+<p style="margin-top:20px;">
+Connect with innovators and future tech leaders.
+</p>
+</section>
+
+<footer>
+© 2026 TechFest 3D Experience
+</footer>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+const renderer = new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
+});
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const geometry = new THREE.TorusKnotGeometry(1,0.3,100,16);
+const material = new THREE.MeshStandardMaterial({
+color:0x00ffff,
+metalness:1,
+roughness:0.2
+});
+
+const torus = new THREE.Mesh(geometry,material);
+scene.add(torus);
+
+const light1 = new THREE.PointLight(0xffffff,3);
+light1.position.set(5,5,5);
+scene.add(light1);
+
+const light2 = new THREE.PointLight(0x00ffff,3);
+light2.position.set(-5,-5,5);
+scene.add(light2);
+
+camera.position.z = 4;
+
+function animate(){
+requestAnimationFrame(animate);
+
+torus.rotation.x += 0.01;
+torus.rotation.y += 0.01;
+
+renderer.render(scene,camera);
+}
+
+animate();
+
+window.addEventListener('scroll',()=>{
+
+const scrollY = window.scrollY;
+
+torus.rotation.x = scrollY * 0.005;
+torus.rotation.y = scrollY * 0.005;
+
+camera.position.z = 4 + scrollY * 0.001;
+});
+
+window.addEventListener('resize',()=>{
+
+camera.aspect = window.innerWidth/window.innerHeight;
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+});
+</script>
+
+</body>
+</html>
